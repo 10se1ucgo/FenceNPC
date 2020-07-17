@@ -24,7 +24,7 @@ function ENT:Draw()
 	self:DrawModel()
 end
 
-local function fence_npc_draw_menu()
+function fence_npc_draw_menu()
 	local ent = net.ReadEntity()
 	local message = net.ReadTable()
 	local items = net.ReadTable()
