@@ -21,39 +21,84 @@ fence_npc.purchase_sounds = {"scenes/npc/male01/fantastic01.vcd", "scenes/npc/ma
 
 -- List of teams that are allowed to talk to the NPC.
 fence_npc.teams = {} -- Base table, ignore.
-fence_npc.teams[TEAM_GANG] = true
-fence_npc.teams[TEAM_MOB] = true
-fence_npc.teams[TEAM_THIEF] = true
+fence_npc.teams[TEAM_LADRON] = true
+--fence_npc.teams[TEAM_GANG] = true
+--fence_npc.teams[TEAM_MOB] = true
+--fence_npc.teams[TEAM_THIEF] = true
 
--- The text in the menu. Only the first three do anything.
-fence_npc.message = {
-	"Hey there, kid. Need to get some items",		--Menu text
-	"off your hands, quick? I'll take em for ya.",	--Menu text
-	"Don't expect exceptional offers, though.",		--Menu text
-	"Stolen Item Fence",							--Menu Window Title
-	"Take these.",									--Menu Accept Button
-	"Get out of here...",							--Reject - Invalid Job
-	"Bring me stuff to sell...",					--Reject - Nothing to sell
-	"Total Offer"									--Total offer text
+-- Localization Settings
+fence_npc.locale = {} -- Base table, ignore.
+
+fence_npc.locale.localLang = "es" --Set this to your language from the list below, or add your own (See below for instructions)
+--[[
+Available Languages:
+	en		-	English
+	es		-	Spanish
+]]
+
+--[[
+Localization Tables
+ -> To create a new language, copy the entire 'en' table below and paste it as its own table.
+ -> Change 'en' to whatever code you wish to use for your language.
+ -> Go through and edit the strings in your language table.
+ -> Change fence_npc.localizations.localLang = "en" to whatever language string you choose.
+]]
+fence_npc.locale["en"] = {
+	msg1 		= 	"Hey there, kid. Need to get some items",		--Menu line 1
+	msg2 		= 	"off your hands, quick? I'll take em for ya.",	--Menu line 2
+	msg3 		= 	"Don't expect exceptional offers, though.",		--Menu line 3
+	title 		=	"Stolen Item Fence", 							--Menu Window Title
+	button 		=	"Take these.", 									--Menu Accept Button
+	reject1 	=	"Get out of here...", 							--Reject - Invalid Job
+	reject2 	=	"Bring me stuff to sell...", 					--Reject - Nothing to sell
+	offer 		=	"Total Offer" 									--Total offer text
+}
+
+fence_npc.locale["es"] = {
+	msg1 		= 	"¿Necesitas sacarte algunas cosas de",			--Menu line 1
+	msg2 		= 	"tus manos ya? Yo te las compro.",				--Menu line 2
+	msg3 		= 	"No vayas a esperar buenas ofertas...",			--Menu line 3
+	title 		=	"Mercado Negro", 								--Menu Window Title
+	headTitle 	=	"Mercado Negro", 								--Menu Window Title
+	button 		=	"Vender", 										--Menu Accept Button
+	reject1 	=	"Vete de aqui...", 								--Reject - Invalid Job
+	reject2 	=	"Traeme cosas que quieras vender...", 			--Reject - Nothing to sell
+	offer 		=	"Oferta Total" 									--Total offer text
 }
 
 -- Display customization
+fence_npc.display = {} -- Base table, ignore.
+fence_npc.display.color = {}  -- Base table, ignore.
 
 -- Should draw entity name for entries on the list?
-fence_npc.displaySettings_drawEntityName = false
+fence_npc.display.drawEntityName = false
 
-fence_npc.displaySettings_colorTable = { --Only modifications allowed.
-	Color(228, 100, 75),		-- Title bar and accept button color
-	Color(255, 255, 255),		-- Title bar and accept button text color
-	Color(228, 100, 75, 225),	-- Scrollbar color
-	Color(211, 47, 47),			-- Close button color when mouse hovers over it
-	Color(32, 32, 32),			-- Background color
-	Color(255, 255, 255),		-- Background text color
-	Color(66, 66, 66, 255),		-- Item Entry Background color
-	Color(255, 255, 255, 255),	-- Item Entry Title text color
-	Color(76, 175, 80, 255),	-- Item Entry Price text color
-	Color(255, 255, 255, 20)	-- Item Entry EntityName text color
-}
+-- Should draw floating title text above the npc?
+fence_npc.display.drawFloatingText = true
+
+--Default Blue & White theme
+fence_npc.display.color.button 			= Color(33, 150, 243)		-- Title bar and accept button color
+fence_npc.display.color.button_text 	= Color(255, 255, 255)		-- Title bar and accept button text color
+fence_npc.display.color.scrollbar 		= Color(33, 150, 243, 225)	-- Scrollbar color
+fence_npc.display.color.close_hover 	= Color(211, 47, 47)		-- Close button color when mouse hovers over it
+fence_npc.display.color.background 		= Color(255, 255, 255)		-- Background color
+fence_npc.display.color.background_text = Color(0, 0, 0)			-- Background text color
+fence_npc.display.color.item_background = Color(66, 66, 66, 255)	-- Item Entry Background color
+fence_npc.display.color.item_title 		= Color(255, 255, 255, 255)	-- Item Entry Title text color
+fence_npc.display.color.item_price 		= Color(76, 175, 80, 255)	-- Item Entry Price text color
+fence_npc.display.color.item_entname  	= Color(255, 255, 255, 20)	-- Item Entry EntityName text color
+
+--Alternative Orange & Black Theme
+--fence_npc.display.color.button 			= Color(228, 100, 75)		-- Title bar and accept button color
+--fence_npc.display.color.button_text 	= Color(255, 255, 255)		-- Title bar and accept button text color
+--fence_npc.display.color.scrollbar 		= Color(228, 100, 75, 225)	-- Scrollbar color
+--fence_npc.display.color.close_hover 	= Color(211, 47, 47)		-- Close button color when mouse hovers over it
+--fence_npc.display.color.background 		= Color(32, 32, 32)			-- Background color
+--fence_npc.display.color.background_text = Color(255, 255, 255)		-- Background text color
+--fence_npc.display.color.item_background = Color(66, 66, 66, 255)	-- Item Entry Background color
+--fence_npc.display.color.item_title 		= Color(255, 255, 255, 255)	-- Item Entry Title text color
+--fence_npc.display.color.item_price 		= Color(76, 175, 80, 255)	-- Item Entry Price text color
+--fence_npc.display.color.item_entname  	= Color(255, 255, 255, 20)	-- Item Entry EntityName text color
 
 
 -- List of items the NPC is willing to buy.

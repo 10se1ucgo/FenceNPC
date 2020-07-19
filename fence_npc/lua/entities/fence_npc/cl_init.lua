@@ -15,21 +15,27 @@ See the License for the specific language governing permissions and
 limitations under the License.
 --]]
 include('shared.lua')
+include('fence_npc_config.lua')
 
 surface.CreateFont("fence_npc_item", {font = "Roboto", size = 16})
 surface.CreateFont("fence_npc_text", {font = "Roboto", size = 18})
 surface.CreateFont("fence_npc_title", {font = "Roboto", size = 23})
 
+
 function ENT:Draw()
+	-- Draw the model
 	self:DrawModel()
+	if fence_npc.display.drawFloatingText then
+		--local pos = self:GetBonePosition(self:LookupBone("ValveBiped.Bip01_Head1")) + Vector( 0, 0, 15 ) -- SLOWER
+		local pos = self:GetBonePosition(6) + Vector( 0, 0, 15 ) --FASTER, if text draws incorrectly, use the one above.
+		local ang = Angle( 0, SysTime() * 50 % 360, 90 )
+		Draw3DText( pos, ang, 0.2, fence_npc.locale[fence_npc.locale.localLang].headTitle, false )
+		Draw3DText( pos, ang, 0.2, fence_npc.locale[fence_npc.locale.localLang].headTitle, true )
+	end
 end
 
 function fence_npc_draw_menu()
 	local ent = net.ReadEntity()
-	local message = net.ReadTable()
-	local items = net.ReadTable()
-	local drawEntName = net.ReadBool()
-	local colorTable = net.ReadTable()
 	local closeEntities = net.ReadTable()
 
 	local frame = vgui.Create("DFrame")
@@ -43,8 +49,8 @@ function fence_npc_draw_menu()
 	frame:ShowCloseButton(false)
 	frame:MakePopup()
 	frame.Paint = function(self, w, h)
-		drawBlurRectangle(0, 0, 0, w, h, colorTable[5])
-		drawBlurRectangle(0, 0, 0, w, 32, colorTable[1])
+		drawBlurRectangle(0, 0, 0, w, h, fence_npc.display.color.background)
+		drawBlurRectangle(0, 0, 0, w, 32, fence_npc.display.color.button)
 
 		--[[ Draw Material hamburger menu icon (So stupid, why did I even do this?)
 		surface.SetDrawColor(255, 255, 255)
@@ -57,42 +63,42 @@ function fence_npc_draw_menu()
 		--]]
 
 		surface.SetFont("fence_npc_title")
-		surface.SetTextColor(colorTable[2])
+		surface.SetTextColor(fence_npc.display.color.button_text)
 		surface.SetTextPos(7, 5)
-		surface.DrawText(message[4])
+		surface.DrawText(fence_npc.locale[fence_npc.locale.localLang].title)
 
 		surface.SetFont("fence_npc_text")
-		surface.SetTextColor(colorTable[6])
+		surface.SetTextColor(fence_npc.display.color.background_text)
 		surface.SetTextPos(110, 45)
-		surface.DrawText(message[1])
+		surface.DrawText(fence_npc.locale[fence_npc.locale.localLang].msg1)
 		surface.SetTextPos(110, 63)
-		surface.DrawText(message[2])
+		surface.DrawText(fence_npc.locale[fence_npc.locale.localLang].msg2)
 		surface.SetTextPos(110, 81)
-		surface.DrawText(message[3])
+		surface.DrawText(fence_npc.locale[fence_npc.locale.localLang].msg3)
 		
 		--Draw total offer
 		surface.SetFont("fence_npc_title")
-		surface.SetTextColor(colorTable[9])
+		surface.SetTextColor(fence_npc.display.color.item_price)
 		surface.SetTextPos(0 + 10, h - 35)
-		surface.DrawText( message[8] .. ": $" .. getTotalOffer(items, closeEntities) )
+		surface.DrawText( fence_npc.locale[fence_npc.locale.localLang].offer .. ": $" .. getTotalOffer(fence_npc.items, closeEntities) )
 	end
 
-	local close_color = colorTable[1]
+	local close_color = fence_npc.display.color.button
 	local close_button = vgui.Create('DButton', frame)
 	close_button:SetSize(46, 30)
 	close_button:SetPos(frame:GetWide() - close_button:GetWide() - 1, 1)
 	close_button:SetFont("fence_npc_text")
 	close_button:SetText('X')
-	close_button:SetColor(colorTable[2])
+	close_button:SetColor(fence_npc.display.color.button_text)
 	close_button.DoClick = function() frame:Close() end
 	close_button.Paint = function(self, w, h)
 		draw.RoundedBox(0, 0, 0, w, h, close_color)
 	end
 	close_button.OnCursorEntered = function()
-		close_color = colorTable[4]
+		close_color = fence_npc.display.color.close_hover
 	end
 	close_button.OnCursorExited = function()
-		close_color = colorTable[1]
+		close_color = fence_npc.display.color.button
 	end
 
 	local model_icon = vgui.Create("DModelPanel", frame)
@@ -112,7 +118,7 @@ function fence_npc_draw_menu()
 
 	local scroll_bar = item_scroll_panel:GetVBar()
 	function scroll_bar.btnGrip:Paint(w, h)
-		draw.RoundedBox(4, 3, 0, w - 8, h, colorTable[3])
+		draw.RoundedBox(4, 3, 0, w - 8, h, fence_npc.display.color.scrollbar)
 	end
 	function scroll_bar:Paint(w, h)
 		return
@@ -127,7 +133,7 @@ function fence_npc_draw_menu()
 	local item_list = vgui.Create("DListLayout", item_scroll_panel)
 	item_list:SetSize(380, 0)
 	item_list:SetPos(0, 0)
-	for item_ent, values in SortedPairs(items) do
+	for item_ent, values in SortedPairs(fence_npc.items) do
 		if table.HasValue(closeEntities, item_ent) then
 			local item_quantity = getItemQuantity(item_ent, closeEntities)
 
@@ -141,26 +147,26 @@ function fence_npc_draw_menu()
 			item_info_panel:SetSize(400, 100)
 			item_info_panel:SetPos(0, 0)
 			item_info_panel.Paint = function(self, w, h)
-				draw.RoundedBox(0, 0, 0, w, h, colorTable[7])
+				draw.RoundedBox(0, 0, 0, w, h, fence_npc.display.color.item_background)
 	
 				-- surface.DrawOutlinedRect needs a thickness arg :(
-				surface.SetDrawColor(colorTable[5])
+				surface.SetDrawColor(fence_npc.display.color.background)
 				for i = 0, 4 do
 					surface.DrawOutlinedRect(i, i, w - i * 2, h - i * 2)
 				end
 				
 	
 				surface.SetFont("fence_npc_title")
-				surface.SetTextColor(colorTable[8])
+				surface.SetTextColor(fence_npc.display.color.item_title)
 				surface.SetTextPos(10, 8)
 				surface.DrawText(item_quantity .. "x " .. values.name)
 	
-				surface.SetTextColor(colorTable[9])
+				surface.SetTextColor(fence_npc.display.color.item_price)
 				surface.SetTextPos(10, 8 + select(2, surface.GetTextSize(values.name)))
 				surface.DrawText("$" .. string.Comma(values.offer * item_quantity))
 	
-				if drawEntName then
-					surface.SetTextColor(colorTable[10])
+				if fence_npc.display.drawEntityName then
+					surface.SetTextColor(fence_npc.display.color.item_entname)
 					surface.SetTextPos(10, 69)
 					surface.DrawText(item_ent)
 					surface.SetDrawColor(0, 0, 0)
@@ -182,13 +188,13 @@ function fence_npc_draw_menu()
 
 	local yes_button = vgui.Create("DButton", frame)
 	yes_button:SetFont("fence_npc_item")
-	yes_button:SetText(message[5])
-	yes_button:SetTextColor(colorTable[2])
+	yes_button:SetText(fence_npc.locale[fence_npc.locale.localLang].button)
+	yes_button:SetTextColor(fence_npc.display.color.button_text)
 	yes_button:SetSize(100, 25)
 	--yes_button:SetPos(frame:GetWide() / 2 - yes_button:GetWide() / 2, frame:GetTall() - 35)
 	yes_button:SetPos(frame:GetWide() - yes_button:GetWide() - 10, frame:GetTall() - 35)
 	yes_button.Paint = function(self, w, h)
-		draw.RoundedBox(0, 0, 0, w, h, colorTable[1])
+		draw.RoundedBox(0, 0, 0, w, h, fence_npc.display.color.button)
 	end
 	yes_button.DoClick = function()
 		net.Start("fence_npc_activated")
@@ -215,6 +221,16 @@ function getItemQuantity(item, closeEntList)
 	return totalItems
 end
 
+function Draw3DText( pos, ang, scale, text, flipView )
+	if ( flipView ) then
+		-- Flip the angle 180 degrees around the UP axis
+		ang:RotateAroundAxis( Vector( 0, 0, 1 ), 180 )
+	end
+	cam.Start3D2D( pos, ang, scale )
+		-- Actually draw the text. Customize this to your liking.
+		draw.DrawText( text, "fence_npc_title", 0, 0, Color( 255, 255, 255, 255 ), TEXT_ALIGN_CENTER )
+	cam.End3D2D()
+end
 
 function drawBlurRectangle(r,x,y,l,h,color)
 	draw.RoundedBox(r,x,y,l,h,Color(0,0,0))

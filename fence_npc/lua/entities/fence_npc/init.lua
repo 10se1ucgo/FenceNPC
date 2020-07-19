@@ -16,6 +16,7 @@ limitations under the License.
 --]]
 AddCSLuaFile('cl_init.lua')
 AddCSLuaFile('shared.lua')
+AddCSLuaFile('fence_npc_config.lua')
 
 include('shared.lua')
 
@@ -42,7 +43,7 @@ function ENT:Use(activator, caller)
 	end
 
 	if not fence_npc.teams[activator:Team()] then
-		activator:ChatPrint("[" .. fence_npc.message[4] .. "] - " .. fence_npc.message[6] )
+		activator:ChatPrint("[" .. fence_npc.locale[fence_npc.locale.localLang].title .. "] - " .. fence_npc.locale[fence_npc.locale.localLang].reject1 )
 	 	self:PlayScene(table.Random(fence_npc.reject_sounds))
 	 	return
 	end
@@ -50,18 +51,14 @@ function ENT:Use(activator, caller)
 	self:PlayScene(table.Random(fence_npc.use_sounds))
 
 	if table.Count(closeEnts) == 0 then
-		activator:ChatPrint("[" .. fence_npc.message[4] .. "] - ".. fence_npc.message[7] )
+		activator:ChatPrint("[" .. fence_npc.locale[fence_npc.locale.localLang].title .. "] - ".. fence_npc.locale[fence_npc.locale.localLang].reject2 )
 		self:PlayScene(table.Random(fence_npc.noitem_sounds))
 		return
 	end
 
-
+	--Greatly reduced network overhead.
 	net.Start("fence_npc_draw_menu")
 	net.WriteEntity(self)
-	net.WriteTable(fence_npc.message)
-	net.WriteTable(fence_npc.items)
-	net.WriteBool(fence_npc.displaySettings_drawEntityName)
-	net.WriteTable(fence_npc.displaySettings_colorTable)
 	net.WriteTable(closeEnts)
 	net.Send(activator)
 end
