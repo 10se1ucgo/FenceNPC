@@ -26,7 +26,9 @@ fence_npc.teams[TEAM_THIEF] = true
 fence_npc.message = {
 	"Hey there, kid. Need to get some items",
 	"off your hands, quick? I'll take em for ya.",
-	"Don't expect exceptional offers, though."
+	"Don't expect exceptional offers, though.",
+	"Stolen Item Fence",
+	"Yeah, I do."
 }
 
 -- List of items the NPC is willing to buy.
