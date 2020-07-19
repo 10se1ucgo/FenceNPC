@@ -123,14 +123,13 @@ function fence_npc_draw_menu()
 	function scroll_bar.btnDown:Paint(w, h)
 		return
 	end
-
+	
 	local item_list = vgui.Create("DListLayout", item_scroll_panel)
 	item_list:SetSize(380, 0)
 	item_list:SetPos(0, 0)
-	local item_quantity = 0
 	for item_ent, values in SortedPairs(items) do
 		if table.HasValue(closeEntities, item_ent) then
-			item_quantity = getItemQuantity(item_ent, closeEntities)
+			local item_quantity = getItemQuantity(item_ent, closeEntities)
 
 			if frame_height < 555 then
 				frame_height = frame_height + 100
