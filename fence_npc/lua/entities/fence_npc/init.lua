@@ -87,24 +87,45 @@ function ENT:RunBehaviour()
 end
 
 function ENT:Pay()
+	local sellEnts = {}
+	-- Get number of available items to sell
 	for _, ent in pairs(ents.FindInSphere(self:GetPos(), fence_npc.range)) do
 		if fence_npc.items[ent:GetClass()] and IsValid(ent) then
-			self:PlayScene(table.Random(fence_npc.purchase_sounds))
-			self.stand = true
-			self.pay = true
-			timer.Simple(4, function()
-				-- We check again just in case the user pocketed the item, or it was somehow removed, as it then causes errors.
-				if IsValid(ent) then
-					DarkRP.createMoneyBag(self:GetPos() + self:GetForward() * 25 + Vector(0, 0, 40), fence_npc.items[ent:GetClass()]["offer"])
-					ent:Remove()
-				end
-				self.sit = true
-				self.being_used = false
-			end)
-			return
+			table.insert(sellEnts, ent)
 		end
 	end
+
+	if (table.Count(sellEnts) > 0) then
+		self:PlayScene(table.Random(fence_npc.purchase_sounds))
+		self.stand = true
+		self.pay = true
+
+		timer.Simple(4, function()
+			local totalMoney = 0
+			local itemsSold = 0
+			for _, ent in pairs(ents.FindInSphere(self:GetPos(), fence_npc.range)) do
+				if fence_npc.items[ent:GetClass()] and IsValid(ent) then
+					-- We check again just in case the user pocketed the item, or it was somehow removed, as it then causes errors.
+					if IsValid(ent) then
+						totalMoney = totalMoney + fence_npc.items[ent:GetClass()]["offer"]
+						itemsSold = itemsSold + 1
+						ent:Remove()
+					end
+				end
+			end
+
+			self.sit = true
+			self.being_used = false
+			if (itemsSold > 0) then
+				DarkRP.createMoneyBag(self:GetPos() + self:GetForward() * 25 + Vector(0, 0, 40), totalMoney)
+			end
+			return
+		end)
+	else
+		--the item moved away, or got removed.
+	end
 	self.being_used = false
+	return
 end
 
 function ENT:OnKilled()

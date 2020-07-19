@@ -21,7 +21,6 @@ fence_npc.purchase_sounds = {"scenes/npc/male01/fantastic01.vcd", "scenes/npc/ma
 
 -- List of teams that are allowed to talk to the NPC.
 fence_npc.teams = {} -- Base table, ignore.
---fence_npc.teams[TEAM_LADRON] = true
 fence_npc.teams[TEAM_GANG] = true
 fence_npc.teams[TEAM_MOB] = true
 fence_npc.teams[TEAM_THIEF] = true
