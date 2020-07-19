@@ -43,12 +43,12 @@ fence_npc.message = {
 fence_npc.displaySettings_drawEntityName = false
 
 fence_npc.displaySettings_colorTable = { --Only modifications allowed.
-	Color(33, 150, 243),		-- Title bar and accept button color
+	Color(228, 100, 75),		-- Title bar and accept button color
 	Color(255, 255, 255),		-- Title bar and accept button text color
-	Color(33, 150, 243, 225),	-- Scrollbar color
+	Color(228, 100, 75, 225),	-- Scrollbar color
 	Color(211, 47, 47),			-- Close button color when mouse hovers over it
-	Color(255, 255, 255),		-- Background color
-	Color(0, 0, 0),				-- Background text color
+	Color(32, 32, 32),			-- Background color
+	Color(255, 255, 255),		-- Background text color
 	Color(66, 66, 66, 255),		-- Item Entry Background color
 	Color(255, 255, 255, 255),	-- Item Entry Title text color
 	Color(76, 175, 80, 255),	-- Item Entry Price text color

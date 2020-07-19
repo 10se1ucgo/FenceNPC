@@ -43,8 +43,8 @@ function fence_npc_draw_menu()
 	frame:ShowCloseButton(false)
 	frame:MakePopup()
 	frame.Paint = function(self, w, h)
-		draw.RoundedBox(0, 0, 0, w, h, colorTable[5])
-		draw.RoundedBox(0, 0, 0, w, 32, colorTable[1])
+		drawBlurRectangle(0, 0, 0, w, h, colorTable[5])
+		drawBlurRectangle(0, 0, 0, w, 32, colorTable[1])
 
 		--[[ Draw Material hamburger menu icon (So stupid, why did I even do this?)
 		surface.SetDrawColor(255, 255, 255)
@@ -79,8 +79,8 @@ function fence_npc_draw_menu()
 
 	local close_color = colorTable[1]
 	local close_button = vgui.Create('DButton', frame)
-	close_button:SetSize(48, 32)
-	close_button:SetPos(frame:GetWide() - close_button:GetWide() - 3, 0)
+	close_button:SetSize(46, 30)
+	close_button:SetPos(frame:GetWide() - close_button:GetWide() - 1, 1)
 	close_button:SetFont("fence_npc_text")
 	close_button:SetText('X')
 	close_button:SetColor(colorTable[2])
@@ -216,5 +216,10 @@ function getItemQuantity(item, closeEntList)
 	return totalItems
 end
 
+
+function drawBlurRectangle(r,x,y,l,h,color)
+	draw.RoundedBox(r,x,y,l,h,Color(0,0,0))
+	draw.RoundedBox(r,x + 1,y + 1,l - 2,h - 2,color)
+end
 
 net.Receive("fence_npc_draw_menu", fence_npc_draw_menu)
