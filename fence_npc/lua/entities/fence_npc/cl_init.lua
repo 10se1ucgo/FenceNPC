@@ -74,7 +74,7 @@ function fence_npc_draw_menu()
 		surface.SetFont("fence_npc_title")
 		surface.SetTextColor(colorTable[9])
 		surface.SetTextPos(0 + 10, h - 35)
-		surface.DrawText( message[8] .. ": $" .. getTotal(items, closeEntities) )
+		surface.DrawText( message[8] .. ": $" .. getTotalOffer(items, closeEntities) )
 	end
 
 	local close_color = colorTable[1]
