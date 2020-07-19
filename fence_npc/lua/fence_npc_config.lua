@@ -8,7 +8,10 @@ fence_npc.models = {"models/humans/Group03/male_02.mdl"}
 fence_npc.range = 80
 
 -- Sounds the NPC will randomly play when you +use it, but you do not belong to the whitelisted teams below.
-fence_npc.reject_sounds = {"scenes/npc/male01/gethellout.vcd"}
+fence_npc.reject_sounds = {"scenes/npc/male01/gethellout.vcd", "scenes/npc/male01/answer17.vcd"}
+
+-- Sounds the NPC will randomly play when you +use it, but you no valid items are near the npc.
+fence_npc.noitem_sounds = {"scenes/npc/male01/gordead_ans10.vcd", "scenes/npc/male01/answer25.vcd", "scenes/npc/male01/answer05.vcd"}
 
 -- Sounds the NPC will randomly play when you +use it.
 fence_npc.use_sounds = {"scenes/npc/male01/hi01.vcd", "scenes/npc/male01/hi02.vcd"}
@@ -24,11 +27,13 @@ fence_npc.teams[TEAM_THIEF] = true
 
 -- The text in the menu. Only the first three do anything.
 fence_npc.message = {
-	"Hey there, kid. Need to get some items",
-	"off your hands, quick? I'll take em for ya.",
-	"Don't expect exceptional offers, though.",
-	"Stolen Item Fence",
-	"Yeah, I do."
+	"Hey there, kid. Need to get some items",		--Menu text
+	"off your hands, quick? I'll take em for ya.",	--Menu text
+	"Don't expect exceptional offers, though.",		--Menu text
+	"Stolen Item Fence",							--Menu Window Title
+	"Yeah, I do.",									--Menu Accept Button
+	"Get out of here...",							--Reject - Invalid Job
+	"Bring me stuff to sell..."						--Reject - Nothing to sell
 }
 
 -- Display customization

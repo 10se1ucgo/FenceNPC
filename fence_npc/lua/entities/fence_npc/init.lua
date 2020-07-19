@@ -41,12 +41,19 @@ function ENT:Use(activator, caller)
 		end
 	end
 
-	if table.Count(closeEnts) == 0 or not fence_npc.teams[activator:Team()] then
+	if not fence_npc.teams[activator:Team()] then
+		activator:ChatPrint("[" .. fence_npc.message[4] .. "] - " .. fence_npc.message[6] )
 	 	self:PlayScene(table.Random(fence_npc.reject_sounds))
 	 	return
 	end
 
 	self:PlayScene(table.Random(fence_npc.use_sounds))
+
+	if table.Count(closeEnts) == 0 then
+		activator:ChatPrint("[" .. fence_npc.message[4] .. "] - ".. fence_npc.message[7] )
+		self:PlayScene(table.Random(fence_npc.noitem_sounds))
+		return
+	end
 
 
 	net.Start("fence_npc_draw_menu")
