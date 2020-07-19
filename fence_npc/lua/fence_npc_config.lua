@@ -7,6 +7,9 @@ fence_npc.models = {"models/humans/Group03/male_02.mdl"}
 -- Range at which the NPC will detect items. Keep this low to prevent abuse. (e.g. selling other players' objects through walls without stealing them)
 fence_npc.range = 80
 
+-- Sounds the NPC will randomly play when you +use it, but you do not belong to the whitelisted teams below.
+fence_npc.reject_sounds = {"scenes/npc/male01/gethellout.vcd"}
+
 -- Sounds the NPC will randomly play when you +use it.
 fence_npc.use_sounds = {"scenes/npc/male01/hi01.vcd", "scenes/npc/male01/hi02.vcd"}
 

@@ -34,7 +34,7 @@ function ENT:Use(activator, caller)
 	self.last_use = CurTime()
 
 	if not fence_npc.teams[activator:Team()] then
-	 	self:PlayScene("scenes/npc/male01/gethellout.vcd")
+	 	self:PlayScene(table.Random(fence_npc.reject_sounds))
 	 	return
 	end
 
