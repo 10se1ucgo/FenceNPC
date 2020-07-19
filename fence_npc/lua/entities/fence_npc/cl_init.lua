@@ -69,6 +69,12 @@ function fence_npc_draw_menu()
 		surface.DrawText(message[2])
 		surface.SetTextPos(110, 81)
 		surface.DrawText(message[3])
+		
+		--Draw total offer
+		surface.SetFont("fence_npc_title")
+		surface.SetTextColor(colorTable[9])
+		surface.SetTextPos(0 + 10, h - 35)
+		surface.DrawText( message[8] .. ": $" .. getTotal(items, closeEntities) )
 	end
 
 	local close_color = colorTable[1]
@@ -121,9 +127,11 @@ function fence_npc_draw_menu()
 	local item_list = vgui.Create("DListLayout", item_scroll_panel)
 	item_list:SetSize(380, 0)
 	item_list:SetPos(0, 0)
-
+	local item_quantity = 0
 	for item_ent, values in SortedPairs(items) do
 		if table.HasValue(closeEntities, item_ent) then
+			item_quantity = getItemQuantity(item_ent, closeEntities)
+
 			if frame_height < 555 then
 				frame_height = frame_height + 100
 				frame:SetSize(390, frame_height)
@@ -141,15 +149,16 @@ function fence_npc_draw_menu()
 				for i = 0, 4 do
 					surface.DrawOutlinedRect(i, i, w - i * 2, h - i * 2)
 				end
+				
 	
 				surface.SetFont("fence_npc_title")
 				surface.SetTextColor(colorTable[8])
 				surface.SetTextPos(10, 8)
-				surface.DrawText(values.name)
+				surface.DrawText(item_quantity .. "x " .. values.name)
 	
 				surface.SetTextColor(colorTable[9])
 				surface.SetTextPos(10, 8 + select(2, surface.GetTextSize(values.name)))
-				surface.DrawText("$" .. string.Comma(values.offer))
+				surface.DrawText("$" .. string.Comma(values.offer * item_quantity))
 	
 				if drawEntName then
 					surface.SetTextColor(colorTable[10])
@@ -177,7 +186,8 @@ function fence_npc_draw_menu()
 	yes_button:SetText(message[5])
 	yes_button:SetTextColor(colorTable[2])
 	yes_button:SetSize(100, 25)
-	yes_button:SetPos(frame:GetWide() / 2 - yes_button:GetWide() / 2, frame:GetTall() - 35)
+	--yes_button:SetPos(frame:GetWide() / 2 - yes_button:GetWide() / 2, frame:GetTall() - 35)
+	yes_button:SetPos(frame:GetWide() - yes_button:GetWide() - 10, frame:GetTall() - 35)
 	yes_button.Paint = function(self, w, h)
 		draw.RoundedBox(0, 0, 0, w, h, colorTable[1])
 	end
@@ -189,5 +199,22 @@ function fence_npc_draw_menu()
 	end
 
 end
+
+function getTotalOffer(itemList, closeEntList)
+	local totalOffer = 0
+	for i, entName in ipairs(closeEntList) do
+		totalOffer = totalOffer + itemList[entName].offer
+	end
+	return totalOffer
+end
+
+function getItemQuantity(item, closeEntList)
+	local totalItems = 0
+	for i, entName in ipairs(closeEntList) do
+		if entName == item then totalItems = totalItems + 1 end
+	end
+	return totalItems
+end
+
 
 net.Receive("fence_npc_draw_menu", fence_npc_draw_menu)

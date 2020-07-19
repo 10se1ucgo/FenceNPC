@@ -31,9 +31,10 @@ fence_npc.message = {
 	"off your hands, quick? I'll take em for ya.",	--Menu text
 	"Don't expect exceptional offers, though.",		--Menu text
 	"Stolen Item Fence",							--Menu Window Title
-	"Yeah, I do.",									--Menu Accept Button
+	"Take these.",									--Menu Accept Button
 	"Get out of here...",							--Reject - Invalid Job
-	"Bring me stuff to sell..."						--Reject - Nothing to sell
+	"Bring me stuff to sell...",					--Reject - Nothing to sell
+	"Total Offer"									--Total offer text
 }
 
 -- Display customization
