@@ -1,3 +1,5 @@
+AddCSLuaFile()
+
 -- Base config table, ignore.
 fence_npc = fence_npc or {}
 

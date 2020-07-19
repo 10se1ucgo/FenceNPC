@@ -16,7 +16,6 @@ limitations under the License.
 --]]
 AddCSLuaFile('cl_init.lua')
 AddCSLuaFile('shared.lua')
-AddCSLuaFile('fence_npc_config.lua')
 
 include('shared.lua')
 
