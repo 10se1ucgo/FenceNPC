@@ -32,13 +32,22 @@ end
 function ENT:Use(activator, caller)
 	if self.last_use + 2 > CurTime() or self.being_used or self.sit or self.stand or self.standing or self.pay then return end
 	self.last_use = CurTime()
+	local closeEnts = {}
 
-	if not fence_npc.teams[activator:Team()] then
+	--Check for entities in proximity.
+	for _, ent in pairs(ents.FindInSphere(self:GetPos(), fence_npc.range)) do
+		if fence_npc.items[ent:GetClass()] and IsValid(ent) then
+			table.insert(closeEnts, ent:GetClass())
+		end
+	end
+
+	if table.Count(closeEnts) == 0 or not fence_npc.teams[activator:Team()] then
 	 	self:PlayScene(table.Random(fence_npc.reject_sounds))
 	 	return
 	end
 
 	self:PlayScene(table.Random(fence_npc.use_sounds))
+
 
 	net.Start("fence_npc_draw_menu")
 	net.WriteEntity(self)
@@ -46,6 +55,7 @@ function ENT:Use(activator, caller)
 	net.WriteTable(fence_npc.items)
 	net.WriteBool(fence_npc.displaySettings_drawEntityName)
 	net.WriteTable(fence_npc.displaySettings_colorTable)
+	net.WriteTable(closeEnts)
 	net.Send(activator)
 end
 

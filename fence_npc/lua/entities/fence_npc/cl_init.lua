@@ -30,6 +30,7 @@ function fence_npc_draw_menu()
 	local items = net.ReadTable()
 	local drawEntName = net.ReadBool()
 	local colorTable = net.ReadTable()
+	local closeEntities = net.ReadTable()
 
 	local frame = vgui.Create("DFrame")
 	local frame_height = 190
@@ -122,51 +123,53 @@ function fence_npc_draw_menu()
 	item_list:SetPos(0, 0)
 
 	for item_ent, values in SortedPairs(items) do
-		if frame_height < 555 then
-			frame_height = frame_height + 100
-			frame:SetSize(390, frame_height)
-			frame:Center()
-		end
-
-		local item_info_panel = vgui.Create("DPanel")
-		item_info_panel:SetSize(400, 100)
-		item_info_panel:SetPos(0, 0)
-		item_info_panel.Paint = function(self, w, h)
-			draw.RoundedBox(0, 0, 0, w, h, colorTable[7])
-
-			-- surface.DrawOutlinedRect needs a thickness arg :(
-			surface.SetDrawColor(colorTable[5])
-			for i = 0, 4 do
-				surface.DrawOutlinedRect(i, i, w - i * 2, h - i * 2)
+		if table.HasValue(closeEntities, item_ent) then
+			if frame_height < 555 then
+				frame_height = frame_height + 100
+				frame:SetSize(390, frame_height)
+				frame:Center()
 			end
-
-			surface.SetFont("fence_npc_title")
-			surface.SetTextColor(colorTable[8])
-			surface.SetTextPos(10, 8)
-			surface.DrawText(values.name)
-
-			surface.SetTextColor(colorTable[9])
-			surface.SetTextPos(10, 8 + select(2, surface.GetTextSize(values.name)))
-			surface.DrawText("$" .. string.Comma(values.offer))
-
-			if drawEntName then
-				surface.SetTextColor(colorTable[10])
-				surface.SetTextPos(10, 69)
-				surface.DrawText(item_ent)
-				surface.SetDrawColor(0, 0, 0)
+	
+			local item_info_panel = vgui.Create("DPanel")
+			item_info_panel:SetSize(400, 100)
+			item_info_panel:SetPos(0, 0)
+			item_info_panel.Paint = function(self, w, h)
+				draw.RoundedBox(0, 0, 0, w, h, colorTable[7])
+	
+				-- surface.DrawOutlinedRect needs a thickness arg :(
+				surface.SetDrawColor(colorTable[5])
+				for i = 0, 4 do
+					surface.DrawOutlinedRect(i, i, w - i * 2, h - i * 2)
+				end
+	
+				surface.SetFont("fence_npc_title")
+				surface.SetTextColor(colorTable[8])
+				surface.SetTextPos(10, 8)
+				surface.DrawText(values.name)
+	
+				surface.SetTextColor(colorTable[9])
+				surface.SetTextPos(10, 8 + select(2, surface.GetTextSize(values.name)))
+				surface.DrawText("$" .. string.Comma(values.offer))
+	
+				if drawEntName then
+					surface.SetTextColor(colorTable[10])
+					surface.SetTextPos(10, 69)
+					surface.DrawText(item_ent)
+					surface.SetDrawColor(0, 0, 0)
+				end
 			end
+	
+			if values.mdl != nil then
+				local item_model_panel = vgui.Create("DModelPanel", item_info_panel)
+				item_model_panel:SetSize(100, 95)
+				item_model_panel:SetPos(250, 0)
+				item_model_panel:SetModel(values.mdl)
+				item_model_panel:SetFOV(values.mdlfov)
+				item_model_panel:GetEntity():SetPos(values.mdlpos)
+			end
+	
+			item_list:Add(item_info_panel)
 		end
-
-		if values.mdl != nil then
-			local item_model_panel = vgui.Create("DModelPanel", item_info_panel)
-			item_model_panel:SetSize(100, 95)
-			item_model_panel:SetPos(250, 0)
-			item_model_panel:SetModel(values.mdl)
-			item_model_panel:SetFOV(values.mdlfov)
-			item_model_panel:GetEntity():SetPos(values.mdlpos)
-		end
-
-		item_list:Add(item_info_panel)
 	end
 
 	local yes_button = vgui.Create("DButton", frame)
