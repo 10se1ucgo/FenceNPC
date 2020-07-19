@@ -28,6 +28,8 @@ function fence_npc_draw_menu()
 	local ent = net.ReadEntity()
 	local message = net.ReadTable()
 	local items = net.ReadTable()
+	local drawEntName = net.ReadBool()
+	local colorTable = net.ReadTable()
 
 	local frame = vgui.Create("DFrame")
 	local frame_height = 190
@@ -40,8 +42,8 @@ function fence_npc_draw_menu()
 	frame:ShowCloseButton(false)
 	frame:MakePopup()
 	frame.Paint = function(self, w, h)
-		draw.RoundedBox(0, 0, 0, w, h, Color(255, 255, 255))
-		draw.RoundedBox(0, 0, 0, w, 32, Color(33, 150, 243))
+		draw.RoundedBox(0, 0, 0, w, h, colorTable[5])
+		draw.RoundedBox(0, 0, 0, w, 32, colorTable[1])
 
 		--[[ Draw Material hamburger menu icon (So stupid, why did I even do this?)
 		surface.SetDrawColor(255, 255, 255)
@@ -54,12 +56,12 @@ function fence_npc_draw_menu()
 		--]]
 
 		surface.SetFont("fence_npc_title")
-		surface.SetTextColor(255, 255, 255)
+		surface.SetTextColor(colorTable[2])
 		surface.SetTextPos(7, 5)
 		surface.DrawText(message[4])
 
 		surface.SetFont("fence_npc_text")
-		surface.SetTextColor(0, 0, 0)
+		surface.SetTextColor(colorTable[6])
 		surface.SetTextPos(110, 45)
 		surface.DrawText(message[1])
 		surface.SetTextPos(110, 63)
@@ -68,22 +70,22 @@ function fence_npc_draw_menu()
 		surface.DrawText(message[3])
 	end
 
-	local close_color = Color(33, 150, 243)
+	local close_color = colorTable[1]
 	local close_button = vgui.Create('DButton', frame)
 	close_button:SetSize(48, 32)
 	close_button:SetPos(frame:GetWide() - close_button:GetWide() - 3, 0)
 	close_button:SetFont("fence_npc_text")
 	close_button:SetText('X')
-	close_button:SetColor(Color(255, 255, 255))
+	close_button:SetColor(colorTable[2])
 	close_button.DoClick = function() frame:Close() end
 	close_button.Paint = function(self, w, h)
 		draw.RoundedBox(0, 0, 0, w, h, close_color)
 	end
 	close_button.OnCursorEntered = function()
-		close_color = Color(211, 47, 47)
+		close_color = colorTable[4]
 	end
 	close_button.OnCursorExited = function()
-		close_color = Color(33, 150, 243)
+		close_color = colorTable[1]
 	end
 
 	local model_icon = vgui.Create("DModelPanel", frame)
@@ -103,7 +105,7 @@ function fence_npc_draw_menu()
 
 	local scroll_bar = item_scroll_panel:GetVBar()
 	function scroll_bar.btnGrip:Paint(w, h)
-		draw.RoundedBox(4, 3, 0, w - 8, h, Color(33, 150, 243, 225))
+		draw.RoundedBox(4, 3, 0, w - 8, h, colorTable[3])
 	end
 	function scroll_bar:Paint(w, h)
 		return
@@ -130,27 +132,29 @@ function fence_npc_draw_menu()
 		item_info_panel:SetSize(400, 100)
 		item_info_panel:SetPos(0, 0)
 		item_info_panel.Paint = function(self, w, h)
-			draw.RoundedBox(0, 0, 0, w, h, Color(66, 66, 66, 255))
+			draw.RoundedBox(0, 0, 0, w, h, colorTable[7])
 
 			-- surface.DrawOutlinedRect needs a thickness arg :(
-			surface.SetDrawColor(255, 255, 255)
+			surface.SetDrawColor(colorTable[5])
 			for i = 0, 4 do
 				surface.DrawOutlinedRect(i, i, w - i * 2, h - i * 2)
 			end
 
 			surface.SetFont("fence_npc_title")
-			surface.SetTextColor(255, 255, 255, 255)
+			surface.SetTextColor(colorTable[8])
 			surface.SetTextPos(10, 8)
 			surface.DrawText(values.name)
 
-			surface.SetTextColor(76, 175, 80, 255)
+			surface.SetTextColor(colorTable[9])
 			surface.SetTextPos(10, 8 + select(2, surface.GetTextSize(values.name)))
 			surface.DrawText("$" .. string.Comma(values.offer))
 
-			surface.SetTextColor(255, 255, 255, 20)
-			surface.SetTextPos(10, 69)
-			surface.DrawText(item_ent)
-			surface.SetDrawColor(0, 0, 0)
+			if drawEntName then
+				surface.SetTextColor(colorTable[10])
+				surface.SetTextPos(10, 69)
+				surface.DrawText(item_ent)
+				surface.SetDrawColor(0, 0, 0)
+			end
 		end
 
 		if values.mdl != nil then
@@ -168,11 +172,11 @@ function fence_npc_draw_menu()
 	local yes_button = vgui.Create("DButton", frame)
 	yes_button:SetFont("fence_npc_item")
 	yes_button:SetText(message[5])
-	yes_button:SetTextColor(Color(255, 255, 255))
+	yes_button:SetTextColor(colorTable[2])
 	yes_button:SetSize(100, 25)
 	yes_button:SetPos(frame:GetWide() / 2 - yes_button:GetWide() / 2, frame:GetTall() - 35)
 	yes_button.Paint = function(self, w, h)
-		draw.RoundedBox(0, 0, 0, w, h, Color(33, 150, 243))
+		draw.RoundedBox(0, 0, 0, w, h, colorTable[1])
 	end
 	yes_button.DoClick = function()
 		net.Start("fence_npc_activated")

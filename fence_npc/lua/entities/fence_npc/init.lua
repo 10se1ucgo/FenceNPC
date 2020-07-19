@@ -44,6 +44,8 @@ function ENT:Use(activator, caller)
 	net.WriteEntity(self)
 	net.WriteTable(fence_npc.message)
 	net.WriteTable(fence_npc.items)
+	net.WriteBool(fence_npc.displaySettings_drawEntityName)
+	net.WriteTable(fence_npc.displaySettings_colorTable)
 	net.Send(activator)
 end
 
