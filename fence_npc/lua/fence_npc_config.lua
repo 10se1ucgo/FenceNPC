@@ -23,15 +23,14 @@ fence_npc.purchase_sounds = {"scenes/npc/male01/fantastic01.vcd", "scenes/npc/ma
 
 -- List of teams that are allowed to talk to the NPC.
 fence_npc.teams = {} -- Base table, ignore.
-fence_npc.teams[TEAM_LADRON] = true
---fence_npc.teams[TEAM_GANG] = true
---fence_npc.teams[TEAM_MOB] = true
---fence_npc.teams[TEAM_THIEF] = true
+fence_npc.teams[TEAM_GANG] = true
+fence_npc.teams[TEAM_MOB] = true
+fence_npc.teams[TEAM_THIEF] = true
 
 -- Localization Settings
 fence_npc.locale = {} -- Base table, ignore.
 
-fence_npc.locale.localLang = "es" --Set this to your language from the list below, or add your own (See below for instructions)
+fence_npc.locale.localLang = "en" --Set this to your language from the list below, or add your own (See below for instructions)
 --[[
 Available Languages:
 	en		-	English
@@ -50,10 +49,12 @@ fence_npc.locale["en"] = {
 	msg2 		= 	"off your hands, quick? I'll take em for ya.",	--Menu line 2
 	msg3 		= 	"Don't expect exceptional offers, though.",		--Menu line 3
 	title 		=	"Stolen Item Fence", 							--Menu Window Title
+	headTitle 	=	"Stolen Item Fence", 							--Menu Window Title
 	button 		=	"Take these.", 									--Menu Accept Button
 	reject1 	=	"Get out of here...", 							--Reject - Invalid Job
 	reject2 	=	"Bring me stuff to sell...", 					--Reject - Nothing to sell
-	offer 		=	"Total Offer" 									--Total offer text
+	offer 		=	"Total Offer", 									--Total offer text
+	a_offer 	=	"All Offers" 									--All offers button text
 }
 
 fence_npc.locale["es"] = {
@@ -65,7 +66,8 @@ fence_npc.locale["es"] = {
 	button 		=	"Vender", 										--Menu Accept Button
 	reject1 	=	"Vete de aqui...", 								--Reject - Invalid Job
 	reject2 	=	"Traeme cosas que quieras vender...", 			--Reject - Nothing to sell
-	offer 		=	"Oferta Total" 									--Total offer text
+	offer 		=	"Oferta Total", 								--Total offer text
+	a_offer 	=	"Mis ofertas" 									--All offers button text
 }
 
 -- Display customization

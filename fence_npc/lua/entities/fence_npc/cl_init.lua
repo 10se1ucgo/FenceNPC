@@ -34,6 +34,8 @@ function ENT:Draw()
 	end
 end
 
+windowChildren = 0
+
 function fence_npc_draw_menu()
 	local ent = net.ReadEntity()
 	local closeEntities = net.ReadTable()
@@ -44,7 +46,7 @@ function fence_npc_draw_menu()
 	frame:Center()
 	frame:SetTitle('')
 	frame:SetVisible(true)
-	frame:SetSizable(true)
+	frame:SetSizable(false)
 	frame:SetDraggable(true)
 	frame:ShowCloseButton(false)
 	frame:MakePopup()
@@ -90,7 +92,14 @@ function fence_npc_draw_menu()
 	close_button:SetFont("fence_npc_text")
 	close_button:SetText('X')
 	close_button:SetColor(fence_npc.display.color.button_text)
-	close_button.DoClick = function() frame:Close() end
+	close_button.DoClick = function()										--MAIN FRAME CLOSE
+		if windowChildren ~= 0 then
+			if windowChildren:IsValid() then
+				windowChildren:Close()
+			end
+		end
+		frame:Close()
+	end
 	close_button.Paint = function(self, w, h)
 		draw.RoundedBox(0, 0, 0, w, h, close_color)
 	end
@@ -173,7 +182,7 @@ function fence_npc_draw_menu()
 				end
 			end
 	
-			if values.mdl != nil then
+			if values.mdl ~= nil then
 				local item_model_panel = vgui.Create("DModelPanel", item_info_panel)
 				item_model_panel:SetSize(100, 95)
 				item_model_panel:SetPos(250, 0)
@@ -203,6 +212,140 @@ function fence_npc_draw_menu()
 		frame:Close()
 	end
 
+	local a_offer_button = vgui.Create("DButton", frame)
+	a_offer_button:SetFont("fence_npc_item")
+	a_offer_button:SetText(fence_npc.locale[fence_npc.locale.localLang].a_offer)
+	a_offer_button:SetTextColor(fence_npc.display.color.button_text)
+	a_offer_button:SetSize(100, 25)
+	a_offer_button:SetPos(frame:GetWide() - a_offer_button:GetWide() - 10, 145 - a_offer_button:GetTall())
+
+	a_offer_button.Paint = function(self, w, h)
+		draw.RoundedBox(0, 0, 0, w, h, fence_npc.display.color.button)
+	end
+
+	a_offer_button.DoClick = function()										--CHILD FRAME OPEN
+		if windowChildren ~= 0 then
+			if windowChildren:IsValid() then
+				windowChildren:Close()
+			end
+		end
+		fence_npc_draw_offers(ent, frame)
+	end
+
+end
+
+function fence_npc_draw_offers(ent, parent)
+	local frame = vgui.Create("DFrame")
+	local frame_height = 190
+	frame:SetSize(390, frame_height)
+	frame:Center()
+	frame:SetTitle('')
+	frame:SetVisible(true)
+	frame:SetSizable(false)
+	frame:SetDraggable(true)
+	frame:ShowCloseButton(false)
+	frame:MakePopup()
+	frame.Paint = function(self, w, h)
+		drawBlurRectangle(0, 0, 0, w, h, fence_npc.display.color.background)
+		drawBlurRectangle(0, 0, 0, w, 32, fence_npc.display.color.button)
+
+		surface.SetFont("fence_npc_title")
+		surface.SetTextColor(fence_npc.display.color.button_text)
+		surface.SetTextPos(7, 5)
+		surface.DrawText(fence_npc.locale[fence_npc.locale.localLang].a_offer)
+	end
+	windowChildren = frame
+
+	local close_color = fence_npc.display.color.button
+	local close_button = vgui.Create('DButton', frame)
+	close_button:SetSize(46, 30)
+	close_button:SetPos(frame:GetWide() - close_button:GetWide() - 1, 1)
+	close_button:SetFont("fence_npc_text")
+	close_button:SetText('X')
+	close_button:SetColor(fence_npc.display.color.button_text)
+	close_button.DoClick = function()										--CHILD FRAME CLOSE
+		windowChildren = 0
+		frame:Close()
+	end
+	close_button.Paint = function(self, w, h)
+		draw.RoundedBox(0, 0, 0, w, h, close_color)
+	end
+	close_button.OnCursorEntered = function()
+		close_color = fence_npc.display.color.close_hover
+	end
+	close_button.OnCursorExited = function()
+		close_color = fence_npc.display.color.button
+	end
+
+	local item_scroll_panel = vgui.Create("DScrollPanel", frame)
+	item_scroll_panel:SetPos(5, 42)
+	item_scroll_panel:SetSize(380, 520)
+
+	local scroll_bar = item_scroll_panel:GetVBar()
+	function scroll_bar.btnGrip:Paint(w, h)
+		draw.RoundedBox(4, 3, 0, w - 8, h, fence_npc.display.color.scrollbar)
+	end
+	function scroll_bar:Paint(w, h)
+		return
+	end
+	function scroll_bar.btnUp:Paint(w, h)
+		return
+	end
+	function scroll_bar.btnDown:Paint(w, h)
+		return
+	end
+	
+	local item_list = vgui.Create("DListLayout", item_scroll_panel)
+	item_list:SetSize(380, 0)
+	item_list:SetPos(0, 0)
+	for item_ent, values in SortedPairs(fence_npc.items) do
+		if frame_height < 555 then
+			frame_height = frame_height + 100
+			frame:SetSize(390, frame_height)
+			frame:Center()
+		end
+
+		local item_info_panel = vgui.Create("DPanel")
+		item_info_panel:SetSize(400, 100)
+		item_info_panel:SetPos(0, 0)
+		item_info_panel.Paint = function(self, w, h)
+			draw.RoundedBox(0, 0, 0, w, h, fence_npc.display.color.item_background)
+
+			-- surface.DrawOutlinedRect needs a thickness arg :(
+			surface.SetDrawColor(fence_npc.display.color.background)
+			for i = 0, 4 do
+				surface.DrawOutlinedRect(i, i, w - i * 2, h - i * 2)
+			end
+			
+
+			surface.SetFont("fence_npc_title")
+			surface.SetTextColor(fence_npc.display.color.item_title)
+			surface.SetTextPos(10, 8)
+			surface.DrawText(values.name)
+
+			surface.SetTextColor(fence_npc.display.color.item_price)
+			surface.SetTextPos(10, 8 + select(2, surface.GetTextSize(values.name)))
+			surface.DrawText("$" .. string.Comma(values.offer))
+
+			if fence_npc.display.drawEntityName then
+				surface.SetTextColor(fence_npc.display.color.item_entname)
+				surface.SetTextPos(10, 69)
+				surface.DrawText(item_ent)
+				surface.SetDrawColor(0, 0, 0)
+			end
+		end
+
+		if values.mdl ~= nil then
+			local item_model_panel = vgui.Create("DModelPanel", item_info_panel)
+			item_model_panel:SetSize(100, 95)
+			item_model_panel:SetPos(250, 0)
+			item_model_panel:SetModel(values.mdl)
+			item_model_panel:SetFOV(values.mdlfov)
+			item_model_panel:GetEntity():SetPos(values.mdlpos)
+		end
+
+		item_list:Add(item_info_panel)
+	end
 end
 
 function getTotalOffer(itemList, closeEntList)
