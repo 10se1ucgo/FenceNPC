@@ -32,18 +32,33 @@ end
 function ENT:Use(activator, caller)
 	if self.last_use + 2 > CurTime() or self.being_used or self.sit or self.stand or self.standing or self.pay then return end
 	self.last_use = CurTime()
+	local closeEnts = {}
+
+	--Check for entities in proximity.
+	for _, ent in pairs(ents.FindInSphere(self:GetPos(), fence_npc.range)) do
+		if fence_npc.items[ent:GetClass()] and IsValid(ent) then
+			table.insert(closeEnts, ent:GetClass())
+		end
+	end
 
 	if not fence_npc.teams[activator:Team()] then
-	 	self:PlayScene("scenes/npc/male01/gethellout.vcd")
+		activator:ChatPrint("[" .. fence_npc.locale[fence_npc.locale.localLang].title .. "] - " .. fence_npc.locale[fence_npc.locale.localLang].reject1 )
+	 	self:PlayScene(table.Random(fence_npc.reject_sounds))
 	 	return
 	end
 
 	self:PlayScene(table.Random(fence_npc.use_sounds))
 
+	if table.Count(closeEnts) == 0 then
+		activator:ChatPrint("[" .. fence_npc.locale[fence_npc.locale.localLang].title .. "] - ".. fence_npc.locale[fence_npc.locale.localLang].reject2 )
+		self:PlayScene(table.Random(fence_npc.noitem_sounds))
+		return
+	end
+
+	--Greatly reduced network overhead.
 	net.Start("fence_npc_draw_menu")
 	net.WriteEntity(self)
-	net.WriteTable(fence_npc.message)
-	net.WriteTable(fence_npc.items)
+	net.WriteTable(closeEnts)
 	net.Send(activator)
 end
 
@@ -68,24 +83,45 @@ function ENT:RunBehaviour()
 end
 
 function ENT:Pay()
+	local sellEnts = {}
+	-- Get number of available items to sell
 	for _, ent in pairs(ents.FindInSphere(self:GetPos(), fence_npc.range)) do
 		if fence_npc.items[ent:GetClass()] and IsValid(ent) then
-			self:PlayScene(table.Random(fence_npc.purchase_sounds))
-			self.stand = true
-			self.pay = true
-			timer.Simple(4, function()
-				-- We check again just in case the user pocketed the item, or it was somehow removed, as it then causes errors.
-				if IsValid(ent) then
-					DarkRP.createMoneyBag(self:GetPos() + self:GetForward() * 25 + Vector(0, 0, 40), fence_npc.items[ent:GetClass()]["offer"])
-					ent:Remove()
-				end
-				self.sit = true
-				self.being_used = false
-			end)
-			return
+			table.insert(sellEnts, ent)
 		end
 	end
+
+	if (table.Count(sellEnts) > 0) then
+		self:PlayScene(table.Random(fence_npc.purchase_sounds))
+		self.stand = true
+		self.pay = true
+
+		timer.Simple(4, function()
+			local totalMoney = 0
+			local itemsSold = 0
+			for _, ent in pairs(ents.FindInSphere(self:GetPos(), fence_npc.range)) do
+				if fence_npc.items[ent:GetClass()] and IsValid(ent) then
+					-- We check again just in case the user pocketed the item, or it was somehow removed, as it then causes errors.
+					if IsValid(ent) then
+						totalMoney = totalMoney + fence_npc.items[ent:GetClass()]["offer"]
+						itemsSold = itemsSold + 1
+						ent:Remove()
+					end
+				end
+			end
+
+			self.sit = true
+			self.being_used = false
+			if (itemsSold > 0) then
+				DarkRP.createMoneyBag(self:GetPos() + self:GetForward() * 25 + Vector(0, 0, 40), totalMoney)
+			end
+			return
+		end)
+	else
+		--the item moved away, or got removed.
+	end
 	self.being_used = false
+	return
 end
 
 function ENT:OnKilled()
