@@ -35,6 +35,7 @@ fence_npc.locale.localLang = "en" --Set this to your language from the list belo
 Available Languages:
 	en		-	English
 	es		-	Spanish
+	ru      -   Russian
 ]]
 
 --[[
@@ -68,6 +69,19 @@ fence_npc.locale["es"] = {
 	reject2 	=	"Traeme cosas que quieras vender...", 			--Reject - Nothing to sell
 	offer 		=	"Oferta Total", 								--Total offer text
 	a_offer 	=	"Mis ofertas" 									--All offers button text
+}
+
+fence_npc.locale["ru"] = {
+	msg1 		= 	"Привет, малыш. Нужно быстро убрать с рук",		--Menu line 1
+	msg2 		= 	"какие-то вещи? Я заберу их у тебя.",	        --Menu line 2
+	msg3 		= 	"Но не ожидай исключительных предложений.",  	--Menu line 3
+	title 		=	"Скупщик краденых вещей", 						--Menu Window Title
+	headTitle 	=	"Скупщик краденых вещей", 						--Menu Window Title
+	button 		=	"Забирай.", 									--Menu Accept Button
+	reject1 	=	"Убирайся отсюда...", 							--Reject - Invalid Job
+	reject2 	=	"Принеси мне вещи, которые можно продать...",   --Reject - Nothing to sell
+	offer 		=	"Общее предложение", 						    --Total offer text
+	a_offer 	=	"Все предложения" 								--All offers button text
 }
 
 -- Display customization
