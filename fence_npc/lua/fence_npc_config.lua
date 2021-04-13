@@ -72,14 +72,14 @@ fence_npc.locale["es"] = {
 }
 
 fence_npc.locale["ru"] = {
-	msg1 		= 	"Привет, малыш. Нужно быстро убрать с рук",		--Menu line 1
-	msg2 		= 	"какие-то вещи? Я заберу их у тебя.",	        --Menu line 2
+	msg1 		= 	"Эй, парень. Нужно быстро убрать с рук",		--Menu line 1
+	msg2 		= 	"что-нибудь? Я могу предложить за это хорошую цену.", --Menu line 2
 	msg3 		= 	"Но не ожидай исключительных предложений.",  	--Menu line 3
 	title 		=	"Скупщик краденых вещей", 						--Menu Window Title
 	headTitle 	=	"Скупщик краденых вещей", 						--Menu Window Title
 	button 		=	"Забирай.", 									--Menu Accept Button
 	reject1 	=	"Убирайся отсюда...", 							--Reject - Invalid Job
-	reject2 	=	"Принеси мне вещи, которые можно продать...",   --Reject - Nothing to sell
+	reject2 	=	"Принеси мне ещё, что можно продать...",        --Reject - Nothing to sell
 	offer 		=	"Общее предложение", 						    --Total offer text
 	a_offer 	=	"Все предложения" 								--All offers button text
 }
