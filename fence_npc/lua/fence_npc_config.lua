@@ -71,6 +71,19 @@ fence_npc.locale["es"] = {
 	a_offer 	=	"Mis ofertas" 									--All offers button text
 }
 
+fence_npc.locale["de"] = {
+	msg1 		= 	"Hey du... Ich brauch ein paar Items",		--Menu line 1
+	msg2 		= 	"Du musst etwas schnell loswerden? Ich übernehme das.",	--Menu line 2
+	msg3 		= 	"Erwarte jedoch keine außergewöhnlichen Angebote.",		--Menu line 3
+	title 		=	"Gestohlene Items Fence", 							--Menu Window Title
+	headTitle 	=	"Gestohlene Items Fence", 							--Menu Window Title
+	button 		=	"Nimm das.", 									--Menu Accept Button
+	reject1 	=	"Mit dir rede ich nicht...", 							--Reject - Invalid Job
+	reject2 	=	"Bring mir etwas, das ich kaufen kann...", 					--Reject - Nothing to sell
+	offer 		=	"Gesamtes Angebot", 									--Total offer text
+	a_offer 	=	"Alle Angebote" 									--All offers button text
+}
+
 fence_npc.locale["ru"] = {
 	msg1 		= 	"Эй, парень. Нужно быстро убрать с рук",		--Menu line 1
 	msg2 		= 	"что-нибудь? Я могу предложить за это хорошую цену.", --Menu line 2
